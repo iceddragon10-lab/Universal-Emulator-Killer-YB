@@ -1,176 +1,77 @@
-# Universal-Emulator-Killer-YB
-# 🎮 Universal Emulator Killer
+# Universal Emulator Killer
 
-### One controller shortcut. Close your emulator. Get back to gaming.
+A lightweight AutoHotkey v2 script that silently closes selected emulator processes with an Xbox/XInput controller shortcut.
 
-**Universal Emulator Killer** is a lightweight Windows utility built with AutoHotkey v2 that allows you to instantly close running game emulators using nothing but your Xbox controller.
+## Default shortcut
 
-No keyboard shortcuts to remember. No need to Alt+Tab. No searching through Task Manager. Just press your configured controller combination, and the emulator closes silently in the background.
+**Hold Left Trigger + B + D-pad Down**
 
-Designed for gamers who use multiple emulators and want a quick, convenient way to exit their games.
+The script polls XInput controller slot 0 every 30 ms. When the shortcut is detected, it checks the configured process-name list and closes matching processes. It has a one-second cooldown and shows no success/failure notifications.
 
----
+## Requirements
 
-## ✨ Features
+- Windows
+- [AutoHotkey v2](https://www.autohotkey.com/)
+- An XInput-compatible controller (for example, an Xbox controller)
 
-- 🎮 **Xbox Controller Support** – Uses XInput to detect controller inputs.
-- ⚡ **Instant Closing** – Terminates matching emulator processes.
-- 🤫 **Completely Silent** – No popups, notifications, or confirmation dialogs.
-- 🌍 **Extensive Emulator Database** – Includes process names for Nintendo, PlayStation, Xbox, Sega, Atari, Android, arcade, and retro-computing emulators.
-- 🔧 **Customizable** – Easily add your own emulator process names.
-- 🪶 **Lightweight** – Runs quietly in the Windows background.
-- 🔄 **Cooldown Protection** – Prevents repeated activation from one held combination.
+## Install and run
 
-## 🎮 Default Controller Shortcut
+1. Install AutoHotkey v2.
+2. Download `UniversalEmulatorKiller.ahk` from this repository.
+3. Double-click the `.ahk` file to run it.
+4. Hold **LT + B + D-pad Down** to close matching emulator processes.
 
-Hold all three inputs simultaneously:
+To stop the script, find its green AutoHotkey tray icon, right-click it, and choose **Exit**.
 
-| Controller input | Action |
-|---|---|
-| Left Trigger (LT) | Hold |
-| B button | Hold |
-| D-Pad Down | Hold |
+## Customize the emulator list
 
-**Result:** All matching running emulator processes are closed.
+Edit the `emulators` array near the top of the script. Add process names **without** `.exe`.
 
-The shortcut can be customized directly in the `.ahk` script.
-
----
-
-## 📥 Installation
-
-### 1. Install AutoHotkey v2
-
-This project requires **AutoHotkey v2.0 or newer** to run.
-
-Download it from the official website:
-
-👉 https://www.autohotkey.com/
-
-Make sure you install version 2, not AutoHotkey v1. The script uses AutoHotkey v2 syntax and is not compatible with v1.
-
-### 2. Download Universal Emulator Killer
-
-1. Open this GitHub repository.
-2. Click the green **Code** button.
-3. Select **Download ZIP**.
-4. Extract the downloaded ZIP file somewhere convenient.
-
-### 3. Run the script
-
-1. Locate `UniversalEmulatorKiller.ahk`.
-2. Double-click the file.
-3. The script will start running in the background.
-4. Connect your Xbox-compatible controller.
-
-That's it! You can now use the controller shortcut to close supported emulators.
-
----
-
-## 🕹️ Supported Emulators
-
-The included process database covers a wide range of emulator families:
-
-- **Nintendo:** Eden, Lichii, Ryujinx, Yuzu, Citra, Azahar, Lime3DS, Dolphin, Cemu, and more.
-- **PlayStation:** DuckStation, PCSX2, RPCS3, ShadPS4, Vita3K, PPSSPP, and more.
-- **Xbox:** Xenia, Xemu, Cxbx-Reloaded, and more.
-- **Sega:** Flycast, Redream, Kega Fusion, BlastEm, and more.
-- **Atari:** Stella, Hatari, Altirra, and more.
-- **Arcade:** MAME, FinalBurn Neo, and Supermodel.
-- **Android:** BlueStacks, LDPlayer, NoxPlayer, MEmu, MuMu, and Genymotion.
-- **Retro Computing:** DOSBox, 86Box, PCem, WinUAE, and more.
-- **Multi-System:** RetroArch, Ares, BizHawk, Mesen, and Mednafen.
-
-*Note: This is a curated process-name database, not a guarantee of compatibility with every emulator. Actual executable names can vary between versions and distributions.*
-
----
-
-## 🔧 Adding Your Own Emulators
-
-Can't find your emulator in the list?
-
-You can easily add it yourself.
-
-1. Open `UniversalEmulatorKiller.ahk` using Notepad or your preferred code editor.
-2. Find the `emulators := [` section.
-3. Add your emulator's process name without `.exe`.
-
-Example:
+For example, if Task Manager shows `example-emu.exe`, add:
 
 ```autohotkey
-"my-emulator",
-"another-emulator",
+"example-emu",
 ```
 
-4. Save the file.
-5. Restart the script.
+The process name must match the actual executable name. Emulator launchers and frontends may use a different process name from the emulator itself.
 
-To find the correct process name, open Windows Task Manager → Details while your emulator is running.
+## Current coverage
 
----
+The included list contains process-name candidates for emulators across:
 
-## ⚙️ Requirements
+- Nintendo consoles and handhelds
+- PlayStation
+- Xbox
+- Sega
+- Atari
+- Arcade systems
+- Commodore and Amiga
+- DOS and retro PC systems
+- Android emulators
+- Multi-system emulators
 
-- Windows 10 or Windows 11.
-- AutoHotkey v2.0 or newer.
-- An Xbox or XInput-compatible controller.
-- A supported emulator process.
+This is a curated list, **not a guarantee that every emulator on earth is supported**. Emulator names and process names vary by version, fork, and distribution. Some listed names may not exist on your PC.
 
-**Important:** The current implementation monitors XInput controller slot 0.
+## Important behavior and safety
 
----
+- The script uses `ProcessClose()` and therefore force-terminates matching processes. Unsaved emulator state or game progress may be lost.
+- It checks only XInput controller slot **0**. Other controller slots are not currently monitored.
+- It closes only processes whose executable names match entries in the list. It does not discover every emulator automatically.
+- Generic process names can belong to unrelated software. Review the list before adding broad names such as `player`, `emulator`, or `qemu-system-x86_64`.
+- If an emulator is running with higher privileges, AutoHotkey may need to be run with matching or higher privileges.
+- The script does not intentionally close Windows, Steam, or other general-purpose processes unless their names are added to the list.
 
-## ⚠️ Important Information
+## Troubleshooting
 
-- The script forcefully terminates matching processes.
-- Unsaved game progress may be lost.
-- It does not automatically detect every emulator in existence.
-- Some emulators use additional background processes that may remain running.
-- If an emulator runs with administrator privileges, the script may need equivalent privileges.
-- Be careful when adding generic process names because they may belong to unrelated applications.
+1. Confirm the emulator's exact process name in **Task Manager → Details**.
+2. Add that name to the `emulators` array without `.exe`.
+3. Confirm the controller is recognized as an XInput controller and is assigned to slot 0.
+4. If closing fails, try running the script with the same Windows privilege level as the emulator.
 
----
+## Contributing
 
-## 📜 License & Credits
+Pull requests adding verified emulator executable names, improving controller compatibility, or fixing bugs are welcome. Please include the emulator name and the exact process name observed on Windows.
 
-### AutoHotkey
+## License
 
-This project is powered by [AutoHotkey](https://www.autohotkey.com/), a free and open-source Windows automation and scripting utility.
-
-AutoHotkey is distributed under the **GNU General Public License v2.0 (GPL-2.0)**.
-
-- [AutoHotkey Official GitHub Repository](https://github.com/AutoHotkey/AutoHotkey)
-- [AutoHotkey GPL-2.0 License](https://github.com/AutoHotkey/AutoHotkey/blob/alpha/license.txt)
-- [GNU GPL v2 Full License](https://www.gnu.org/licenses/old-licenses/gpl-2.0.html)
-
-Universal Emulator Killer does not bundle the AutoHotkey runtime.
-
-**Important:** The AutoHotkey runtime's license is separate from the license of this project's own script. See the repository's `LICENSE` file for the terms governing this project.
-
-### Credits
-
-- [AutoHotkey](https://www.autohotkey.com/) – Scripting language and runtime.
-- Microsoft XInput – Xbox controller input interface.
-
----
-
-## ❤️ Contributing
-
-Have an emulator that isn't supported?
-
-Contributions are welcome!
-
-You can help by:
-- Adding verified emulator process names.
-- Improving controller compatibility.
-- Reporting bugs.
-- Suggesting new features.
-- Improving documentation.
-
-Every contribution helps make Universal Emulator Killer better for everyone.
-
-**If you find this project useful, consider giving the repository a ⭐ Star!**
-
----
-
-*Made for gamers, by gamers.*
+No license has been specified yet. Until a license is added, assume the usual default copyright applies; do not assume others have permission to redistribute or modify this project.

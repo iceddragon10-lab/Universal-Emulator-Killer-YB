@@ -1,0 +1,8 @@
+# AutoHotkey compiled binaries
+*.exe
+
+# Editor / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
